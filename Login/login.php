@@ -1,6 +1,6 @@
 <?php
-	require $_SERVER['DOCUMENT_ROOT']."/Demo/Include/head.php";
-	require $_SERVER['DOCUMENT_ROOT']."/Demo/Nav/nav.php";
+	require $_SERVER['DOCUMENT_ROOT']."/php_project_demo/Include/head.php";
+	require $_SERVER['DOCUMENT_ROOT']."/php_project_demo/Nav/nav.php";
 ?>
 <?php
   phpinfo();
