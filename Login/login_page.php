@@ -4,7 +4,7 @@
 ?>
 <div class="container">
 	<div class="wrapper">
-		<form action="login.php" method="post" name="Login_Form" class="form-signin" method="post">       
+		<form action="../home.php" method="post" name="Login_Form" class="form-signin" method="post">       
 				<h3 class="form-signin-heading">Login</h3>
 				
 				<input type="text" class="form-control" name="Username" placeholder="Username" required="" autofocus="" />
