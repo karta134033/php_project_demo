@@ -1,7 +1,7 @@
 <style>
   #logo {
   position: absolute;
-  top: 25%;
+  bottom: 5%;
   left: 50%;
   transform: translate(-50%, -50%);
   animation:  fill 0.5 ease forwards 15s;
@@ -145,6 +145,6 @@
   const logo = document.querySelectorAll('#logo path');
 
   for(let i=0; i<logo.length; i++) {
-    console.log(`Letter ${i} is ${logo[i].getTotalLength()}`);
+    // console.log(`Letter ${i} is ${logo[i].getTotalLength()}`);
   }
 </script>
