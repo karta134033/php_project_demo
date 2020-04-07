@@ -1,7 +1,7 @@
 <?php
-require dirname(__FILE__)."/include/head.php";
-require dirname(__FILE__)."/login_nav.php";
-require dirname(__FILE__)."/animations/svg.php";
+require_once dirname(__FILE__)."/include/head.php";
+require_once dirname(__FILE__)."/login_nav.php";
+require_once dirname(__FILE__)."/animations/svg.php";
 
 unset($_SESSION['login']);
 unset($_SESSION['id']);
@@ -13,7 +13,7 @@ unset($_SESSION['username']);
 		<form
 			id="form"
 			class="form-signin"
-			method="post"  
+			method="get"  
 			action="/php_project_demo/model/login_check.php" 
 		>       
 			<h3 class="form-signin-heading">Login</h3>
@@ -44,27 +44,25 @@ unset($_SESSION['username']);
 </div>
 
 <script>
-$(document).ready(function() {
-	if(getUrlVars()['error']) {
-		Swal.fire({
-				icon: 'warning',
-				title: 'Oops...',
-				text: decodeURIComponent(getUrlVars()['error']),
-		});
-	}
-	function getUrlVars()
+if(getUrlVars()['error']) {
+	Swal.fire({
+			icon: 'warning',
+			title: 'Oops...',
+			text: decodeURIComponent(getUrlVars()['error']),
+	});
+}
+function getUrlVars()
+{
+	var vars = [], hash;
+	var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+	for(var i = 0; i < hashes.length; i++)
 	{
-		var vars = [], hash;
-		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-		for(var i = 0; i < hashes.length; i++)
-		{
-			hash = hashes[i].split('=');
-			vars.push(hash[0]);
-			vars[hash[0]] = hash[1];
-		}
-		return vars;
+		hash = hashes[i].split('=');
+		vars.push(hash[0]);
+		vars[hash[0]] = hash[1];
 	}
-});
+	return vars;
+}
 </script>
 
 <style>

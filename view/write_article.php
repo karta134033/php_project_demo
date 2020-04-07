@@ -1,6 +1,6 @@
 <?php
-require dirname(__FILE__) . "/login_status.php";
-require dirname(__FILE__) . "/blog_nav.php";
+require_once dirname(__FILE__) . "/login_status.php";
+require_once dirname(__FILE__) . "/blog_nav.php";
 ?>
 
 <div>
@@ -70,12 +70,12 @@ var imagePreview = document.querySelector('[data-target="image-preview"]');
 var fileUploader = document.querySelector('[data-target="file-uploader"]');
 var imgUrl = '';
 var base64Img = '';
-var arrayBuffer = '';
 fileUploader.addEventListener("change", handleFileUpload);
 
 $("#form").submit(function(e) {
   $("#submit").attr("disabled", true);
   var params= {
+    writeArticle: '',
     title: $('#title').val(),
     content: $('#content').val(),
     img: base64Img
@@ -83,11 +83,10 @@ $("#form").submit(function(e) {
   var query=jQuery.param(params);
   var form=$(this);
   var url=form.attr('action');
-  console.log('params', params);
   $.ajax({
     type: "POST",
     url: url,
-    data: params, // serializes the form's elements.
+    data: params,
     success: function(data) {
       console.log('result', data);
       if(data.includes('文章新增成功')) {
@@ -105,7 +104,7 @@ $("#form").submit(function(e) {
       }
     }
   });
-  e.preventDefault(); // avoid to execute the actual submit of the form.
+  e.preventDefault(); // 避免將表單直接發送而造成頁面跳轉.
 });
 
 async function handleFileUpload(e) {
@@ -121,9 +120,7 @@ async function handleFileUpload(e) {
         text: beforeUploadCheck.errorMessages,
       });;
     }
-    arrayBuffer = await getArrayBuffer(file);
-    arrayBuffer = Array.from(new Uint8Array(arrayBuffer))
-    console.log('arrayBuffer', arrayBuffer);
+    var arrayBuffer = await getArrayBuffer(file);
     showPreviewImage(file);
   } catch (error) {
     console.log("Catch Error: ", error);
@@ -135,7 +132,7 @@ async function handleFileUpload(e) {
 function showPreviewImage(fileObj) {
   imgUrl = URL.createObjectURL(fileObj);
   imagePreview.src = imgUrl;
-  $('#img').css("width", "100%");
+  $('#img').css("width", "50%");
   console.log('imgUrl', imgUrl);
 }
 
@@ -150,40 +147,16 @@ function getArrayBuffer(fileObj) {
     });
     reader.readAsArrayBuffer(fileObj);
     reader.onload = function (event) {
-      // blob stuff
-      var blob = new Blob([event.target.result]); // create blob...
+      var blob = new Blob([event.target.result]);
       window.URL = window.URL || window.webkitURL;
-      var blobURL = window.URL.createObjectURL(blob); // and get it's URL
-      // helper Image object
+      var blobURL = window.URL.createObjectURL(blob); 
       var image = new Image();
       image.src = blobURL;
       image.onload = function() {
-        var resized = resizeMe(image); // send it to canvas
+        var resized = resizeImg(image); // send it to canvas
       }
     }
   });
-}
-
-function uploadFileAJAX(arrayBuffer) {
-  return fetch("https://jsonplaceholder.typicode.com/posts/", {
-    headers: {
-      version: 1,
-      "content-type": "application/json"
-    },
-    method: "POST",
-    body: JSON.stringify({
-      imageId: 1,
-      icon: Array.from(new Uint8Array(arrayBuffer))
-    })
-  })
-    .then(res => {
-      if (!res.ok) {
-        throw res.statusText;
-      }
-      return res.json();
-    })
-    .then(data => data)
-    .catch(err => console.log("err", err));
 }
 
 function beforeUpload(fileObject) {
@@ -208,7 +181,7 @@ function beforeUpload(fileObject) {
   });
 }
 
-function resizeMe(img) {  // 壓縮檔案用
+function resizeImg(img) {  // 壓縮檔案用
   var canvas = document.createElement('canvas');
 
   var max_width = 500;
@@ -231,9 +204,10 @@ function resizeMe(img) {  // 壓縮檔案用
   canvas.width = width;
   canvas.height = height;
   var ctx = canvas.getContext("2d");
+  ctx.fillStyle = '#fff'; /// set white fill style
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(img, 0, 0, width, height);
-  base64Img = canvas.toDataURL("image/jpeg",0.7);
-  console.log(canvas.toDataURL("image/jpeg",0.7));
-  return canvas.toDataURL("image/jpeg",0.1); 
+  base64Img = canvas.toDataURL("image/jpeg",0.8);
+  return base64Img; 
 }
 </script>

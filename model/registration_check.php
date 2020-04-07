@@ -1,5 +1,5 @@
 <?php
-require dirname(__FILE__)."/db_check.php";
+require_once dirname(__FILE__)."/db_check.php";
 
 $query = [
   'email' => htmlspecialchars($_GET["email"]),
@@ -8,7 +8,6 @@ $query = [
 ];
 $conn = db_check();
 insertData($query['email'], $query['username'], $query['password'], $conn);
-
 
 function insertData($email, $username, $password, $conn) {
   $email_sql = "SELECT id FROM user_account WHERE email = '$email'";

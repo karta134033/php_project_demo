@@ -1,9 +1,9 @@
 <?php
-require dirname(__FILE__) . "/db_check.php";
+require_once dirname(__FILE__) . "/db_check.php";
 
 class ArticleClass
 {
-  public function insertData($query)
+  public function insertArticle($query)
   {
     $result = '';
     $user_id = $query['user_id'];
@@ -12,9 +12,9 @@ class ArticleClass
     $content = $query['content'];
     $img = $query['img'];
     $img_path = '';
-    if (strlen($img) > 0) {
+    if (strlen($img) > 0) {  // 處理圖片的檔名問題
       $timestamp = strtotime("now");
-      $img_path =  '/php_project_demo/src/img/'. $timestamp. '.jpg';
+      $img_path =  "/php_project_demo/src/img/". $timestamp. "_". $username. ".jpg";
       $output_file = $_SERVER["DOCUMENT_ROOT"]. $img_path;
       $ifp = fopen( $output_file, 'wb' ); 
       $data = explode( ',', $img );
@@ -29,10 +29,11 @@ class ArticleClass
     } else {
       $result = "Error: " . $sql . "<br>" . $conn->error;
     }
+    $conn->close();
     return $result;
   }
 
-  public function deleteData($id)
+  public function deleteArticle($id)
   {
     $result = '';
     $conn = db_check();
@@ -40,14 +41,52 @@ class ArticleClass
     $img_result = mysqli_query($conn, $sql);
     if (mysqli_num_rows($img_result) > 0) {
       $row = mysqli_fetch_assoc($img_result);
-      unlink($_SERVER["DOCUMENT_ROOT"]. $row['img']);
+      unlink($_SERVER["DOCUMENT_ROOT"]. $row['img']);  // 刪除server端的圖片
     }
-    $sql = "DELETE FROM user_article WHERE id=$id";
-    if (mysqli_query($conn, $sql)) {
+    $article_sql = "DELETE FROM user_article WHERE id=$id";
+    $message_sql = "DELETE FROM user_message WHERE article_id=$id";
+    if (mysqli_query($conn, $article_sql) && mysqli_query($conn, $message_sql)) {
       $result = "文章刪除成功";
     } else {
       $result = "Error: " . $sql . "<br>" . $conn->error;
     }
+    $conn->close();
+    return $result;
+  }
+
+  public function insertMessage($query)
+  {
+    $result = '';
+    $article_id = $query['article_id'];
+    $username =  $query['username'];
+    $content = $query['content'];
+    $conn = db_check();
+    $sql = "INSERT INTO user_message (article_id, username, content)
+    VALUES ('$article_id', '$username', '$content')";
+    if (mysqli_query($conn, $sql)) {
+      $last_id = mysqli_insert_id($conn);
+      $result = $last_id;
+    } else {
+      $result = "Error: " . $sql . "<br>" . $conn->error;
+    }
+    $conn->close();
+    return $result;
+  }
+
+  public function deleteMessage($query)
+  {
+    $result = '';
+    $sql = '';
+    $id = $query['message_id'];
+    $username = $query['username'];
+    $conn = db_check();
+    $sql = "DELETE FROM user_message WHERE id='$id' AND username='$username'";
+    if (mysqli_query($conn, $sql)) {
+      $result = "留言刪除成功";
+    } else {
+      $result = "Error: " . $sql . "<br>" . $conn->error;
+    }
+    $conn->close();
     return $result;
   }
 }

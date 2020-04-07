@@ -1,14 +1,23 @@
 <?php
-require dirname(__FILE__) . "/include/head.php";
-require dirname(__FILE__) . "/login_nav.php";
+require_once dirname(__FILE__) . "/include/head.php";
+require_once dirname(__FILE__) . "/login_nav.php";
 ?>
 
 <div>
-  <form id="form" onsubmit="return false" action="/php_project_demo/model/registration_check.php">
+  <form 
+    id="form" 
+    onsubmit="return false" 
+    action="/php_project_demo/model/registration_check.php"
+  >
     <div>
       <label>
         <p class="label-txt"><b>請輸入EMAIL</b></p>
-        <input id="email" type="email" class="input" required="">
+        <input 
+          id="email" 
+          type="email" 
+          class="input" 
+          required=""
+        >
         <div class="line-box">
           <div class="line"></div>
         </div>
@@ -17,7 +26,12 @@ require dirname(__FILE__) . "/login_nav.php";
     <div>
       <label>
         <p class="label-txt"><b>請輸入使用者名稱</b></p>
-        <input id="username" type="text" class="input" autocomplete="new-password" required="">
+        <input 
+          id="username" 
+          type="text" 
+          class="input" 
+          required=""
+        >
         <div class="line-box">
           <div class="line"></div>
         </div>
@@ -26,7 +40,12 @@ require dirname(__FILE__) . "/login_nav.php";
     <div>
       <label>
         <p class="label-txt"><b>請輸入密碼</b></p>
-        <input id="passwordInput" type="password" class="input" autocomplete="new-password" required="">
+        <input 
+          id="passwordInput" 
+          type="password" 
+          class="input" 
+          required=""
+        >
         <div class="line-box">
           <div class="line"></div>
         </div>
@@ -35,7 +54,13 @@ require dirname(__FILE__) . "/login_nav.php";
     <div>
       <label>
         <p class="label-txt"><b>再確認一次密碼</b></p>
-        <input id="passwordConfirm" type="password" class="input" autocomplete="Off" required="">
+        <input 
+          id="passwordConfirm" 
+          type="password" 
+          class="input" 
+          autocomplete="Off" 
+          required=""
+        >
         <div class="line-box">
           <div class="line"></div>
         </div>

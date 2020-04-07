@@ -1,23 +1,23 @@
 <?php
-require dirname(__FILE__). "/login_status.php";
-require dirname(__FILE__). "/blog_nav.php";
-require dirname(__FILE__). "/animations/box_anime.php";
-require $_SERVER["DOCUMENT_ROOT"]. "/php_project_demo/model/db_check.php";
+require_once dirname(__FILE__). "/login_status.php";
+require_once dirname(__FILE__). "/blog_nav.php";
+require_once dirname(__FILE__). "/animations/box_anime.php";
+require_once $_SERVER["DOCUMENT_ROOT"]. "/php_project_demo/model/db_check.php";
 $conn = db_check();
-$sql = "SELECT id, title, content, username, img, reg_date FROM user_article ORDER BY id DESC;";
-$result = mysqli_query($conn, $sql);
+$article_sql = "SELECT id, title, content, username, img, reg_date FROM user_article ORDER BY id DESC;";
 ?>
 
 <div 
   id="topBtnGroup"
-  class="sticky-top" 
-  align="center" 
-  style="width: 50%; height:15%; margin:0 auto; overflow-y: scroll;"
+  class="sticky-top mt-5" 
+  align="left" 
+  style="width: 10%; height:85%; overflow-y: scroll; overflow-x:hidden; position: absolute;"
 >
   <?php
-  if (mysqli_num_rows($result) > 0) {
-    while($row = mysqli_fetch_assoc($result)) {
-      echo "<button onclick=\"document.getElementById('".$row["id"]. "').scrollIntoView();\">". $row["title"]."</button>";
+  $article_result = mysqli_query($conn, $article_sql);
+  if (mysqli_num_rows($article_result) > 0) {
+    while($row = mysqli_fetch_assoc($article_result)) {
+      echo "<button onclick=\"document.getElementById('".$row["id"]. "').scrollIntoView({block:'end', behavior:'smooth'});\" style=\"width: 100%\">". $row["title"]."</button>";
     }
   }
   ?>
@@ -26,41 +26,70 @@ $result = mysqli_query($conn, $sql);
   <div class="article-lg-12 text-center">
     <h2>Blog Posts</h2>
   </div>
-  <div id="blogContent" class="container" style="height: 100%; overflow-y: scroll;">
-    <div class="container" align="center">
+  <div 
+    id="blogContent" 
+    class="container" 
+    style="height: 100%; overflow-y: scroll;"
+  >
+    <div 
+      class="container" 
+      align="center"
+    >
     <?php
-    $result = mysqli_query($conn, $sql);
-    if (mysqli_num_rows($result) > 0) {
-      while($row = mysqli_fetch_assoc($result)) {
+    $article_result = mysqli_query($conn, $article_sql);
+    if (mysqli_num_rows($article_result) > 0) {
+      while($row = mysqli_fetch_assoc($article_result)) {
         echo "<div id=\"". $row["id"]. "\" class=\"article\" align=\"left\">";
         echo "  <div class=\"text-center mt-5\"><h4>". $row["title"]. "</h4>";
-        echo "    <div class=\"text-right mt-1 mr-2\" style=\"font-size:10px\">發布時間: ". $row["reg_date"]. "</div>";
-        echo "    <div class=\"text-right mt-1 mr-2\" style=\"font-size:10px\">作者: " . $row["username"]. "</div>
+        echo "    <div class=\"text-right mt-1 mr-2\" style=\"font-size: 10px\">發布時間: ". $row["reg_date"]. "</div>";
+        echo "    <div class=\"text-right mt-1 mr-2\" style=\"font-size: 10px\">作者: " . $row["username"]. "</div>
                 </div><hr>";
         if ($row["img"] !== NULL) {
           if(strlen($row["img"]) > 0) {
             $imgSrc = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")."://". $_SERVER['HTTP_HOST']. $row["img"];
-            echo "<div class=\"text-center\" align=\"center\">
-                    <img src=\" ".$imgSrc. "\" width=\"70%\">
+            echo "<div class=\"text-center\" align=\"center\" style=\"width: 100%; margin:0 auto;\">
+                    <img src=\" ".$imgSrc. "\" style=\"display: block; max-width: 100%; max-height: 100%; margin:0 auto;\">
                   </div>";
           }
         }
         echo "  <div style=\"display: flex;\">";
-        echo "    <div class=\"text-center mt-5 ml-5 mr-5\" style=\"font-size:15px\">" . $row["content"]. "</div>
+        echo "    <div class=\"text-center mt-2 ml-5 mr-5\" style=\"font-size:15px\">" . $row["content"]. "</div>
                 </div>";
+        echo "  <div style=\"width: 100%\" align=\"right\">";
+         echo "  <button class=\"btn-sm\" onclick=\"message(".$row["id"]. ",'". $_SESSION['username'] ."')\"> 留言</button>";
         if ($row["username"] === $_SESSION['username']) {
-          echo "<div style=\"width: 100%\" align=\"right\"><button onclick=\"deletArticle(".$row["id"]. ")\"> delete</button></div>";
+          echo "  <button class=\"btn-sm\" onclick=\"deleteArticle(".$row["id"].")\"> 刪除</button>";
         }  // 刪除按鈕
+        echo "  </div>";
+        $article_id = $row["id"];
+        $message_sql = "SELECT id, article_id, username, content, reg_date FROM user_message WHERE article_id='$article_id' ORDER BY id DESC;";
+        $message_result = mysqli_query($conn, $message_sql);
+        echo "  <div id=\"article". $row["id"]. "\">";
+        if (mysqli_num_rows($message_result) > 0) {
+          while($row = mysqli_fetch_assoc($message_result)) {
+            echo "  <div id=\"message". $row["id"] ."\">";
+            echo "    <div class=\"text-center mt-5\">". $row["content"];
+            echo "      <div class=\"text-right mt-1 mr-2\" style=\"font-size: 10px\">發布時間: ". $row["reg_date"]. "</div>";
+            echo "      <div class=\"text-right mt-1 mr-2\" style=\"font-size: 10px\">作者: " . $row["username"]. "</div>";
+            if ($row["username"] === $_SESSION['username']) {
+              echo "    <div class=\"text-right mt-1 mr-2\" style=\"font-size: 10px\"><button class=\"btn-sm\" onclick=\"deleteMessage(".$row["id"].",'". $_SESSION['username'] ."')\"> 刪除留言</button></div>";
+            }  // 刪除按鈕
+            echo "    </div>";
+            echo "  </div>";
+          }
+        }
+        echo "  </div>";
         echo "</div><br>"; 
       }
     }
+    $conn->close();
     ?>
     </div>
   </div>
 </div>
 
 <script>
-function deletArticle(id) {
+function deleteArticle(id) {
   Swal.fire({
   icon: 'warning',
   title: 'warning',
@@ -73,7 +102,7 @@ function deletArticle(id) {
         type: "POST",
         url: '/php_project_demo/model/article_check.php',
         data: {
-          delete: id,
+          deleteArticle: id,
         },
         success: function(data) {
           console.log('result', data);
@@ -94,6 +123,75 @@ function deletArticle(id) {
       });
     }
   });
+}
+function deleteMessage(id, username) {
+  Swal.fire({
+  icon: 'warning',
+  title: 'warning',
+  text: '確定要刪除嗎?',
+  showCancelButton: true,
+  }).then((result) => {
+    if (result.value) {
+      console.log('delete id', id);
+      $.ajax({
+        type: "POST",
+        url: '/php_project_demo/model/article_check.php',
+        data: {
+          deleteMessage: id,
+          username: username,
+        },
+        success: function(data) {
+          $('#message' + id ).remove();
+          Swal.fire({
+          icon: 'success',
+          title: 'OK',
+          text: '刪除留言成功',
+          });
+        }
+      });
+    }
+  });
+}
+async function message(articleId, username) {
+  console.log('articleId', articleId)
+  const { value: text } = await Swal.fire({
+    title: '留言',
+    input: 'textarea',
+    inputPlaceholder: '請輸入留言'
+  })
+  if (text) {
+    var messageId = '';
+    var params= {
+      writeMessage: '',
+      articleId: articleId,
+      username: username,
+      content: text
+    };
+    $.ajax({
+      type: "POST",
+      url: '/php_project_demo/model/article_check.php',
+      data: params,
+      success: function(data) {
+        messageId = data;
+        var dt = new Date();
+        var time = dt.getFullYear() + '-' + (dt.getMonth()+1) + '-' + dt.getDate() + ' ' + dt.getHours() + ':' + dt.getMinutes() + ':' + dt.getSeconds();
+        $('#article' + articleId.toString()).prepend("\
+          <div id=\"message"+ messageId + "\">\
+            <div class=\"text-center mt-5\">" + text + "\
+              <div class=\"text-right mt-1 mr-2\" style=\"font-size: 10px\">發布時間: " + time + "</div>" + "\
+              <div class=\"text-right mt-1 mr-2\" style=\"font-size: 10px\">作者: " + username + "</div>" + "\
+              <div class=\"text-right mt-1 mr-2\" style=\"font-size: 10px\"><button class=\"btn-sm\" onclick=\"deleteMessage('" + messageId +"','" + username + "')\"> 刪除留言</button></div>" + "\
+            </div>\
+          </div>\
+        ");
+        Swal.fire({
+        icon: 'success',
+        title: 'OK',
+        text: '留言成功',
+        });
+      }
+    });
+  } 
 }
 </script>
 

@@ -1,13 +1,11 @@
 <?php
-require dirname(__FILE__)."/db_check.php";
+require_once dirname(__FILE__)."/db_check.php";
 
 session_start();
-unset($_SESSION['login']);
-
-if (isset($_POST['submit'])){
+if (isset($_GET['submit'])){
   $query = [
-    'username' => $_POST["username"],
-    'password' => $_POST["password"]
+    'username' => htmlspecialchars($_GET["username"]),
+    'password' => htmlspecialchars($_GET["password"])
   ];
   $conn = db_check();
   checkData($query['username'], md5($query['password'], false), $conn);

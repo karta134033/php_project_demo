@@ -7,7 +7,7 @@
 <script src="/php_project_demo/view/animations/anime.js"></script>
 <script>
 const staggerVisualizerEl = document.querySelector('.stagger-visualizer');
-const fragment = document.createDocumentFragment();  // 大幅增進Web Page效能物件
+const fragment = document.createDocumentFragment();
 const grid = [17, 17];
 const col = grid[0];
 const row = grid[1];
