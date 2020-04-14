@@ -16,19 +16,19 @@
         showCancelButton: true,
         }).then((result) => {
           if (result.value) {
-            window.location = '/php_project_demo/view/login.php'
+            window.location = '/php_project_demo/views/login.php'
           }
         })"
       ><b>登出</b></button>
       <button 
         class="btn" 
-        onclick="window.location = '/php_project_demo/view/blog.php'"
+        onclick="window.location = '/php_project_demo/views/blog.php'"
       >
         <b>回部落格</b>
       </button>
       <button 
         class="btn" 
-        onclick="window.location = '/php_project_demo/view/write_article.php'"
+        onclick="window.location = '/php_project_demo/views/write_article.php'"
       >
         <b>寫點東西</b>
       </button>

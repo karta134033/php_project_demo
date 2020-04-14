@@ -7,7 +7,7 @@ require_once dirname(__FILE__) . "/login_nav.php";
   <form 
     id="form" 
     onsubmit="return false" 
-    action="/php_project_demo/model/registration_check.php"
+    action="/php_project_demo/models/registration_check.php"
   >
     <div>
       <label>
@@ -80,7 +80,6 @@ $("#form").submit(function(e) {
     });
     return;
   } else {
-    console.log(md5($('#passwordInput').val()));
     var params = {
       email: $('#email').val(),
       username: $('#username').val(),
@@ -110,7 +109,7 @@ $("#form").submit(function(e) {
             showCancelButton: false,
           }).then((result) => {
             if (result.value) {
-              window.location = '/php_project_demo/view/login.php'
+              window.location = '/php_project_demo/views/login.php'
             }
           })
         }

@@ -4,7 +4,7 @@ session_start();
 <title>Demo</title>
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-<link href="/php_project_demo/view/include/style.css" rel="stylesheet" >
+<link href="/php_project_demo/views/include/style.css" rel="stylesheet" >
 <link 
   rel="stylesheet" 
   href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" 
@@ -27,7 +27,7 @@ session_start();
   crossorigin="anonymous"
 ></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script src="/php_project_demo/view/include/md5.js"></script>
+<script src="/php_project_demo/views/include/md5.js"></script>
 <script>
 $(document).ready(function() {
   $('body').addClass('animate-in');

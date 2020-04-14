@@ -14,7 +14,7 @@ unset($_SESSION['username']);
 			id="form"
 			class="form-signin"
 			method="get"  
-			action="/php_project_demo/model/login_check.php" 
+			action="/php_project_demo/models/login_check.php" 
 		>       
 			<h3 class="form-signin-heading">Login</h3>
 			<input

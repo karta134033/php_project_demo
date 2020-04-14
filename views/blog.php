@@ -2,7 +2,7 @@
 require_once dirname(__FILE__). "/login_status.php";
 require_once dirname(__FILE__). "/blog_nav.php";
 require_once dirname(__FILE__). "/animations/box_anime.php";
-require_once $_SERVER["DOCUMENT_ROOT"]. "/php_project_demo/model/db_check.php";
+require_once $_SERVER["DOCUMENT_ROOT"]. "/php_project_demo/models/db_check.php";
 $conn = db_check();
 $article_sql = "SELECT id, title, content, username, img, reg_date FROM user_article ORDER BY id DESC;";
 ?>
@@ -44,7 +44,7 @@ $article_sql = "SELECT id, title, content, username, img, reg_date FROM user_art
         echo "    <div class=\"text-right mt-1 mr-2\" style=\"font-size: 10px\">發布時間: ". $row["reg_date"]. "</div>";
         echo "    <div class=\"text-right mt-1 mr-2\" style=\"font-size: 10px\">作者: " . $row["username"]. "</div>
                 </div><hr>";
-        if ($row["img"] !== NULL) {
+        if ($row["img"] !== NULL) {  // 如果img欄位有數值則顯示圖片
           if(strlen($row["img"]) > 0) {
             $imgSrc = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http")."://". $_SERVER['HTTP_HOST']. $row["img"];
             echo "<div class=\"text-center\" align=\"center\" style=\"width: 100%; margin:0 auto;\">
@@ -57,23 +57,23 @@ $article_sql = "SELECT id, title, content, username, img, reg_date FROM user_art
                 </div>";
         echo "  <div style=\"width: 100%\" align=\"right\">";
          echo "  <button class=\"btn-sm\" onclick=\"message(".$row["id"]. ",'". $_SESSION['username'] ."')\"> 留言</button>";
-        if ($row["username"] === $_SESSION['username']) {
+        if ($row["username"] === $_SESSION['username']) {  // 如果登入狀態與文章的作者相同則新增刪除按鈕
           echo "  <button class=\"btn-sm\" onclick=\"deleteArticle(".$row["id"].")\"> 刪除</button>";
-        }  // 刪除按鈕
+        }
         echo "  </div>";
-        $article_id = $row["id"];
+        $article_id = $row["id"]; 
         $message_sql = "SELECT id, article_id, username, content, reg_date FROM user_message WHERE article_id='$article_id' ORDER BY id DESC;";
         $message_result = mysqli_query($conn, $message_sql);
         echo "  <div id=\"article". $row["id"]. "\">";
-        if (mysqli_num_rows($message_result) > 0) {
+        if (mysqli_num_rows($message_result) > 0) {  // 如果該文章下面有流言則顯示出留言內容
           while($row = mysqli_fetch_assoc($message_result)) {
             echo "  <div id=\"message". $row["id"] ."\">";
             echo "    <div class=\"text-center mt-5\">". $row["content"];
             echo "      <div class=\"text-right mt-1 mr-2\" style=\"font-size: 10px\">發布時間: ". $row["reg_date"]. "</div>";
             echo "      <div class=\"text-right mt-1 mr-2\" style=\"font-size: 10px\">作者: " . $row["username"]. "</div>";
-            if ($row["username"] === $_SESSION['username']) {
+            if ($row["username"] === $_SESSION['username']) {  // 如果登入狀態與留言的作者相同則新增刪除按鈕
               echo "    <div class=\"text-right mt-1 mr-2\" style=\"font-size: 10px\"><button class=\"btn-sm\" onclick=\"deleteMessage(".$row["id"].",'". $_SESSION['username'] ."')\"> 刪除留言</button></div>";
-            }  // 刪除按鈕
+            }
             echo "    </div>";
             echo "  </div>";
           }
@@ -89,7 +89,7 @@ $article_sql = "SELECT id, title, content, username, img, reg_date FROM user_art
 </div>
 
 <script>
-function deleteArticle(id) {
+function deleteArticle(id) {  // 雖然一樣為ajax的方式，但最後有做網頁重整
   Swal.fire({
   icon: 'warning',
   title: 'warning',
@@ -97,15 +97,13 @@ function deleteArticle(id) {
   showCancelButton: true,
   }).then((result) => {
     if (result.value) {
-      console.log('delete id', id);
       $.ajax({
         type: "POST",
-        url: '/php_project_demo/model/article_check.php',
+        url: '/php_project_demo/models/article_check.php',
         data: {
           deleteArticle: id,
         },
         success: function(data) {
-          console.log('result', data);
           if(data.includes('文章刪除成功')) {
             Swal.fire({
               icon: 'success',
@@ -115,7 +113,7 @@ function deleteArticle(id) {
               showCancelButton: false,
             }).then((result) => {
               if (result.value) {
-                window.location = '/php_project_demo/view/blog.php'
+                window.location = '/php_project_demo/views/blog.php'  // 網頁重整
               }
             })
           }
@@ -132,10 +130,9 @@ function deleteMessage(id, username) {
   showCancelButton: true,
   }).then((result) => {
     if (result.value) {
-      console.log('delete id', id);
       $.ajax({
         type: "POST",
-        url: '/php_project_demo/model/article_check.php',
+        url: '/php_project_demo/models/article_check.php',
         data: {
           deleteMessage: id,
           username: username,
@@ -153,7 +150,6 @@ function deleteMessage(id, username) {
   });
 }
 async function message(articleId, username) {
-  console.log('articleId', articleId)
   const { value: text } = await Swal.fire({
     title: '留言',
     input: 'textarea',
@@ -169,7 +165,7 @@ async function message(articleId, username) {
     };
     $.ajax({
       type: "POST",
-      url: '/php_project_demo/model/article_check.php',
+      url: '/php_project_demo/models/article_check.php',
       data: params,
       success: function(data) {
         messageId = data;

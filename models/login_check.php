@@ -16,14 +16,15 @@ function checkData($username, $password, $conn) {
   $result = mysqli_query($conn, $sql);
   if(mysqli_num_rows($result) == 0) {
     echo "帳號或密碼錯誤";
-    header("Location: /php_project_demo/view/login.php?error=帳號密碼錯誤");   
+    header("Location: /php_project_demo/views/login.php?error=帳號密碼錯誤");   
   } else {
     $row = mysqli_fetch_assoc($result);
     echo "登入成功";
     $_SESSION['login'] = true;
     $_SESSION['id'] = $row['id'];
     $_SESSION['username'] = $row['username'];
-    header("Location: /php_project_demo/view/blog.php");   
+    $_SESSION['LAST_ACTIVITY'] = $_SERVER['REQUEST_TIME'];
+    header("Location: /php_project_demo/views/blog.php");   
   }
 }
 $conn->close();

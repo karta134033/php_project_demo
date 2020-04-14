@@ -8,7 +8,7 @@ require_once dirname(__FILE__) . "/blog_nav.php";
     id="form" 
     onsubmit="return false"
     method="post"   
-    action="/php_project_demo/model/article_check.php"
+    action="/php_project_demo/models/article_check.php"
   >
     <label>
       <p class="label-txt"><b>文章標題</b></p>
@@ -88,7 +88,6 @@ $("#form").submit(function(e) {
     url: url,
     data: params,
     success: function(data) {
-      console.log('result', data);
       if(data.includes('文章新增成功')) {
         Swal.fire({
           icon: 'success',
@@ -98,7 +97,7 @@ $("#form").submit(function(e) {
           showCancelButton: false,
         }).then((result) => {
           if (result.value) {
-            window.location = '/php_project_demo/view/blog.php'
+            window.location = '/php_project_demo/views/blog.php'
           }
         })
       }
@@ -120,7 +119,7 @@ async function handleFileUpload(e) {
         text: beforeUploadCheck.errorMessages,
       });;
     }
-    var arrayBuffer = await getArrayBuffer(file);
+    await getArrayBuffer(file);
     showPreviewImage(file);
   } catch (error) {
     console.log("Catch Error: ", error);
@@ -132,8 +131,7 @@ async function handleFileUpload(e) {
 function showPreviewImage(fileObj) {
   imgUrl = URL.createObjectURL(fileObj);
   imagePreview.src = imgUrl;
-  $('#img').css("width", "50%");
-  console.log('imgUrl', imgUrl);
+  $('#img').css("width", "80%");
 }
 
 function getArrayBuffer(fileObj) {
@@ -204,7 +202,7 @@ function resizeImg(img) {  // 壓縮檔案用
   canvas.width = width;
   canvas.height = height;
   var ctx = canvas.getContext("2d");
-  ctx.fillStyle = '#fff'; /// set white fill style
+  ctx.fillStyle = '#fff'; /// 避免png檔背景變為黑色
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(img, 0, 0, width, height);
   base64Img = canvas.toDataURL("image/jpeg",0.8);

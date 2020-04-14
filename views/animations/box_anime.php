@@ -4,7 +4,7 @@
   </div>
 </div>
 
-<script src="/php_project_demo/view/animations/anime.js"></script>
+<script src="/php_project_demo/views/animations/anime.js"></script>
 <script>
 const staggerVisualizerEl = document.querySelector('.stagger-visualizer');
 const fragment = document.createDocumentFragment();
