@@ -5,11 +5,11 @@ http://neil.nctu.me/php_project_demo/view/blog.php
 ## 使用方法
 1. 先將專案從 [github](https://github.com/karta134033/php_project_demo/archive/master.zip) 拉下來 
 2. 將專案資料夾整包放入 /xampp/htdocs/ 資料夾底下
-    ![](https://i.imgur.com/k3pSRbQ.png =600x300)
+    ![](https://i.imgur.com/k3pSRbQ.png)
 
 3.<font color="red">把資料夾檔名"php_project_demo-master" 改為 "php_project_demo"</font>   (沒有改會有路徑問題)
 4. 開啟xampp 並打開Apache MySQL
-![](https://i.imgur.com/SeYnsnV.png =600x300)
+![](https://i.imgur.com/SeYnsnV.png)
 5. 輸入以下網址 
     http://127.0.0.1/php_project_demo/view/blog.php  
     即可看到專案
