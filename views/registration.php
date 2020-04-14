@@ -91,7 +91,6 @@ $("#form").submit(function(e) {
     $.ajax({
       type: "POST",
       url: url + '?' + query,
-      data: form.serialize(), // serializes the form's elements.
       success: function(data) {
         if (data.includes('已註冊過')) {
           Swal.fire({
