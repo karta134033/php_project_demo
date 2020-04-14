@@ -12,7 +12,7 @@ http://neil.nctu.me/php_project_demo/view/blog.php
 ![](https://i.imgur.com/SeYnsnV.png)
 
 5. 輸入以下網址 
-    http://127.0.0.1/php_project_demo/view/blog.php  
+    http://127.0.0.1/php_project_demo/views/blog.php  
     即可看到專案
 ## 架構
 ```tree
